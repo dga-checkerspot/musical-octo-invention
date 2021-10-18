@@ -12,6 +12,7 @@ sequencedataset1= Channel.fromPath(sequences1)
 sequencedataset2= Channel.fromPath(sequences12)
 
 process cutadapt11 {
+	memory '196G'
 	
 	input:
 	path 'cleanfas' from cleanReads12
@@ -20,11 +21,12 @@ process cutadapt11 {
 	file 'R2.fastq' into reads12
 	
 	"""
-	cutadapt --rename='{id}/2' $cleanfas -j 7 -o R2.fastq
+	cutadapt --rename='{id}/2' $cleanfas -j 0 -o R2.fastq
 	"""
 }
 
 process cutadapt12 {
+	memory '196G'
 	
 	input:
 	path 'cleanfas' from cleanReads12
@@ -33,7 +35,7 @@ process cutadapt12 {
 	file 'R2.fastq' into reads12
 	
 	"""
-	cutadapt --rename='{id}/2' $cleanfas -j 7 -o R2.fastq
+	cutadapt --rename='{id}/2' $cleanfas -j 0 -o R2.fastq
 	"""
 }
 
