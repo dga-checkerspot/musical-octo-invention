@@ -28,6 +28,19 @@ process bbnorm {
 }
 
 
+process cutadapt12 {
+	
+	input:
+	path 'cleanfas' from cleanReads12
+	
+	output:
+	file 'R2.fastq' into reads12
+	
+	"""
+	cutadapt --rename='{id}/2' $cleanfas -j 7 -o R2.fastq
+	"""
+}
+
 process pairInt {
 
 	input:
