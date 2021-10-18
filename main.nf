@@ -11,6 +11,32 @@ pairInt='s3://transcriptomepipeline/PairInterleaves.sh'
 sequencedataset1= Channel.fromPath(sequences1)
 sequencedataset2= Channel.fromPath(sequences12)
 
+process cutadapt11 {
+	
+	input:
+	path 'cleanfas' from cleanReads12
+	
+	output:
+	file 'R2.fastq' into reads12
+	
+	"""
+	cutadapt --rename='{id}/2' $cleanfas -j 7 -o R2.fastq
+	"""
+}
+
+process cutadapt12 {
+	
+	input:
+	path 'cleanfas' from cleanReads12
+	
+	output:
+	file 'R2.fastq' into reads12
+	
+	"""
+	cutadapt --rename='{id}/2' $cleanfas -j 7 -o R2.fastq
+	"""
+}
+
 process bbnorm {
 
 	memory '64G'
@@ -28,18 +54,6 @@ process bbnorm {
 }
 
 
-process cutadapt12 {
-	
-	input:
-	path 'cleanfas' from cleanReads12
-	
-	output:
-	file 'R2.fastq' into reads12
-	
-	"""
-	cutadapt --rename='{id}/2' $cleanfas -j 7 -o R2.fastq
-	"""
-}
 
 process pairInt {
 
