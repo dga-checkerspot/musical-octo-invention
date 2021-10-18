@@ -2,9 +2,6 @@
 
 sequences1='s3://transcriptomepipeline/Physaria_Lind_R1.fastq.gz'
 sequences12='s3://transcriptomepipeline/Physaria_Lind_R2.fastq.gz'
-sequences2='s3://transcriptomepipeline/ContaminantsForRemove.fasta'
-sequences22='s3://transcriptomepipeline/ContaminantsForRemove.fasta'
-adapters='s3://transcriptomepipeline/TruSeq3-PE.fa'
 pairInt='s3://transcriptomepipeline/PairInterleaves.sh'
 
 
@@ -15,13 +12,13 @@ process cutadapt11 {
 	memory '196G'
 	
 	input:
-	path 'cleanfas' from cleanReads12
+	path 'cleanfas' from sequencedataset1
 	
 	output:
-	file 'R2.fastq' into reads12
+	file 'R1.fastq' into reads11
 	
 	"""
-	cutadapt --rename='{id}/2' $cleanfas -j 0 -o R2.fastq
+	cutadapt --rename='{id}/1' $cleanfas -j 0 -o R2.fastq
 	"""
 }
 
@@ -29,7 +26,7 @@ process cutadapt12 {
 	memory '196G'
 	
 	input:
-	path 'cleanfas' from cleanReads12
+	path 'cleanfas' from sequencedataset2
 	
 	output:
 	file 'R2.fastq' into reads12
@@ -41,23 +38,25 @@ process cutadapt12 {
 
 process bbnorm {
 
-	memory '64G'
+	memory '196G'
 	
         input:
-        path seq1 from sequencedataset1
-        path seq2 from sequencedataset2
+        path seq1 from reads11
+        path seq2 from reads12
         
         output:
         file 'mid.fq' into ReadTrimNorm1
 
 	"""
-	bbnorm.sh in=$seq1 in2=$seq2 outlow=low.fq outmid=mid.fq outhigh=high.fq passes=1 lowbindepth=6 highbindepth=150 -Xmx62g
+	bbnorm.sh in=$seq1 in2=$seq2 outlow=low.fq outmid=mid.fq outhigh=high.fq passes=1 lowbindepth=6 highbindepth=150 -Xmx1922g
 	"""
 }
 
 
 
 process pairInt {
+
+	memory '16G'
 
 	input:
 	path 'pairInt' from pairInt
@@ -77,6 +76,8 @@ process pairInt {
 
 process fastqpair2 {
 
+	memory '196G'
+
 	input:
 	path R1p from R1Tofastq
 	path R2p from R2Tofastq
@@ -94,10 +95,6 @@ process fastqpair2 {
 pairR1T.into{P1NormSpades; P1NormTrinity}
 pairR2T.into{P2NormSpades; P2NormTrinity}
 
-
-
-//sequencedataset1.into{P1NormSpades; P1NormTrinity}
-//sequencedataset2.into{P2NormSpades; P2NormTrinity}
 
 process SpadeAssemble {
 	
