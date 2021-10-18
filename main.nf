@@ -18,7 +18,7 @@ process cutadapt11 {
 	file 'R1.fastq' into reads11
 	
 	"""
-	cutadapt --rename='{id}/1' $cleanfas -j 0 -o R2.fastq
+	cutadapt --rename='{id}/1' $cleanfas -j 0 -o R1.fastq
 	"""
 }
 
