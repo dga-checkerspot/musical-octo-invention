@@ -95,10 +95,10 @@ process fastqpair2 {
 pairR1T.into{P1NormSpades; P1NormTrinity}
 pairR2T.into{P2NormSpades; P2NormTrinity}
 
-
+/*
 process SpadeAssemble {
 	
-  memory '56G'
+  memory '96G'
 
   input:
     path R1Norm from P1NormSpades
@@ -113,7 +113,7 @@ process SpadeAssemble {
     
     
 }
-
+*/
 
 process TrinityAssemble {
 	
@@ -127,7 +127,7 @@ process TrinityAssemble {
 	file 'Trinity.fasta' into Trinity
 	
   """
-	Trinity --seqType fq --left $R1pair --right $R2pair --max_memory 54G --output trinity_output
+	Trinity --seqType fq --left $R1pair --right $R2pair --max_memory 94G --output trinity_output
 	cp ./trinity_output/Trinity.fasta .
 	"""
 
