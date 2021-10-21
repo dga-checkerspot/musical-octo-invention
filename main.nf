@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
-sequences1='s3://transcriptome.seeds.genewiz.rawdata/MP3_R1_001.fastq.gz'
-sequences12='s3://transcriptome.seeds.genewiz.rawdata/MP3_R2_001.fastq.gz'
+sequences1='s3://transcriptome.seeds.genewiz.rawdata/MB1_R1_001.fastq.gz'
+sequences12='s3://transcriptome.seeds.genewiz.rawdata/MB1_R2_001.fastq.gz'
 pairInt='s3://transcriptomepipeline/PairInterleaves.sh'
 
 
