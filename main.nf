@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
-sequences1='s3://transcriptomepipeline/Physaria_Lind_R1.fastq.gz'
-sequences12='s3://transcriptomepipeline/Physaria_Lind_R2.fastq.gz'
+sequences1='s3://transcriptome.seeds.genewiz.rawdata/MP3_R1_001.fastq.gz'
+sequences12='s3://transcriptome.seeds.genewiz.rawdata/MP3_R2_001.fastq.gz'
 pairInt='s3://transcriptomepipeline/PairInterleaves.sh'
 
 
@@ -9,7 +9,7 @@ sequencedataset1= Channel.fromPath(sequences1)
 sequencedataset2= Channel.fromPath(sequences12)
 
 process cutadapt11 {
-	memory '196G'
+	memory '16G'
 	
 	input:
 	path 'cleanfas' from sequencedataset1
@@ -23,7 +23,7 @@ process cutadapt11 {
 }
 
 process cutadapt12 {
-	memory '196G'
+	memory '16G'
 	
 	input:
 	path 'cleanfas' from sequencedataset2
@@ -56,7 +56,7 @@ process bbnorm {
 
 process pairInt {
 
-	memory '16G'
+	memory '4G'
 
 	input:
 	path 'pairInt' from pairInt
@@ -76,7 +76,7 @@ process pairInt {
 
 process fastqpair2 {
 
-	memory '196G'
+	memory '32G'
 
 	input:
 	path R1p from R1Tofastq
@@ -88,7 +88,7 @@ process fastqpair2 {
 	//For now not even bothering with unpaired
 
 	"""
-	fastq_pair -t 10000000 $R1p $R2p
+	fastq_pair -t 100000000 $R1p $R2p
 	"""
 }
 
