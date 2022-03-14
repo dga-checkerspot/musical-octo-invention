@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
-sequences1='s3://bioinfotransfer/cinnamomum1.fastq.gz'
-sequences12='s3://bioinfotransfer/cinnamomum2.fastq.gz'
+sequences1='s3://bioinfotransfer/Sassafras_1.fastq.gz'
+sequences12='s3://bioinfotransfer/Sassafras_2.fastq.gz'
 pairInt='s3://transcriptomepipeline/PairInterleaves.sh'
 
 
