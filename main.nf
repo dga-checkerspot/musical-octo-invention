@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
-sequences1='s3://bioinfotransfer/Sassafras_1.fastq.gz'
-sequences12='s3://bioinfotransfer/Sassafras_2.fastq.gz'
+sequences1='s3://transcriptome.seeds.illumina.rawdata/IlluminaAcceleratorMiSeqRuns_S/TranscriptomeSeeds-60142091/72118476/LobtusilobaRNA_S1_L001_R1_001.fastq.gz'
+sequences12='s3://transcriptome.seeds.illumina.rawdata/IlluminaAcceleratorMiSeqRuns_S/TranscriptomeSeeds-60142091/72118476/LobtusilobaRNA_S1_L001_R2_001.fastq.gz'
 pairInt='s3://transcriptomepipeline/PairInterleaves.sh'
 
 
