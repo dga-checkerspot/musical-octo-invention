@@ -95,7 +95,7 @@ process fastqpair2 {
 pairR1T.into{P1NormSpades; P1NormTrinity}
 pairR2T.into{P2NormSpades; P2NormTrinity}
 
-/*
+
 process SpadeAssemble {
 	
   memory '96G'
@@ -113,7 +113,7 @@ process SpadeAssemble {
     
     
 }
-*/
+
 
 process TrinityAssemble {
 	
@@ -132,3 +132,6 @@ process TrinityAssemble {
 	"""
 
 }
+
+
+
