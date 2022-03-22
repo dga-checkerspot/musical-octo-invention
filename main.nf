@@ -105,10 +105,12 @@ process SpadeAssemble {
     path R2Norm from P2NormSpades
 
   output:
-    file './spades_output/hard_filtered_transcripts.fasta' into Spades
+    file 'spades_output.tar.gz' into Spades
     
     """
     rnaspades.py  --pe1-1 $R1Norm --pe1-2 $R2Norm  -o spades_output
+    tar -zcvf spades_output.tar.gz spades_output 
+    
     """
     
     
@@ -124,11 +126,11 @@ process TrinityAssemble {
 	path R2pair from P2NormTrinity
 	
   output:
-	file 'Trinity.fasta' into Trinity
+	file 'trinity_output.tar.gz' into Trinity
 	
   """
 	Trinity --seqType fq --left $R1pair --right $R2pair --max_memory 94G --output trinity_output
-	cp ./trinity_output/Trinity.fasta .
+	tar -zcvf trinity_output.tar.gz trinity_output 
 	"""
 
 }
