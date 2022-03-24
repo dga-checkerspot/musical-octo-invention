@@ -98,7 +98,7 @@ pairR2T.into{P2NormSpades; P2NormTrinity}
 
 process SpadeAssemble {
 	
-  memory '96G'
+  memory '24G'
 
   input:
     path R1Norm from P1NormSpades
@@ -119,7 +119,7 @@ process SpadeAssemble {
 
 process TrinityAssemble {
 	
-  memory '96G'
+  memory '196G'
 	
   input:
 	path R1pair from P1NormTrinity
