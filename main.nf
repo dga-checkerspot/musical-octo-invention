@@ -129,7 +129,7 @@ process TrinityAssemble {
 	file 'trinity_output.tar.gz' into Trinity
 	
   """
-	Trinity --seqType fq --left $R1pair --right $R2pair --max_memory 94G --output trinity_output
+	Trinity --seqType fq --left $R1pair --right $R2pair --max_memory 190G --output trinity_output
 	tar -zcvf trinity_output.tar.gz trinity_output 
 	"""
 
