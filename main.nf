@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
-sequences1='s3://pipe.scratch.3/resources/ERR2041045.1_1.fastq'
-sequences12='s3://pipe.scratch.3/resources/ERR2041045.1_2.fastq'
+sequences1='s3://pipe.scratch.3/resources/ERR2041047.1_1.fastq'
+sequences12='s3://pipe.scratch.3/resources/ERR2041047.1_2.fastq'
 pairInt='s3://transcriptomepipeline/PairInterleaves.sh'
 
 
