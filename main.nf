@@ -1,24 +1,53 @@
 #!/usr/bin/env nextflow
 
-sequences1='s3://pipe.scratch.3/resources/ERR2041047.1_1.fastq'
-sequences12='s3://pipe.scratch.3/resources/ERR2041047.1_2.fastq'
-pairInt='s3://transcriptomepipeline/PairInterleaves.sh'
+//sequences1='s3://pipe.scratch.3/resources/ERR2041047.1_1.fastq'
+//sequences12='s3://pipe.scratch.3/resources/ERR2041047.1_2.fastq'
+//pairInt='s3://transcriptomepipeline/PairInterleaves.sh'
 
 
-sequencedataset1= Channel.fromPath(sequences1)
-sequencedataset2= Channel.fromPath(sequences12)
+//sequencedataset1= Channel.fromPath(sequences1)
+//sequencedataset2= Channel.fromPath(sequences12)
+
+
+sraLines1=file('s3://pipe.scratch.3/resources/accessions.txt')
+    .readLines()
+    .each { println it }
+
+
+chlamyref='s3://pipe.scratch.3/resources/Chlamy23s.fasta'
+
+
+process runfasta {
+	
+	input:
+  	val accession from sraLines1
+	
+	output:
+	tuple val(accession), file("${accession}_1.fastq"), file("${accession}_2.fastq") into dumpout
+	
+	
+	"""
+	fastq-dump --split-3 $accession
+	"""
+
+}
+
+dumpout.into{dumpout1; dumpout2}
+
+
+
 
 process cutadapt11 {
 	memory '16G'
 	
 	input:
-	path 'cleanfas' from sequencedataset1
+	tuple val(accession), file(R1), file(R2) from dumpout1
 	
 	output:
-	file 'R1.fastq' into reads11
+	tuple val(accession), file("${accession}_1.fastq") into reads11
 	
 	"""
-	cutadapt --rename='{id}/1' $cleanfas -j 0 -o R1.fastq
+	cutadapt --rename='{id}/1' $R1 -j 0 -o "${accession}_1.fastq"
 	"""
 }
 
@@ -26,13 +55,13 @@ process cutadapt12 {
 	memory '16G'
 	
 	input:
-	path 'cleanfas' from sequencedataset2
+	tuple val(accession), file(R1), file(R2) from dumpout2
 	
 	output:
-	file 'R2.fastq' into reads12
+	tuple val(accession), file("${accession}_2.fastq") into reads12
 	
 	"""
-	cutadapt --rename='{id}/2' $cleanfas -j 0 -o R2.fastq
+	cutadapt --rename='{id}/2' $R2 -j 0 -o "${accession}_2.fastq"
 	"""
 }
 
@@ -41,14 +70,14 @@ process bbnorm {
 	memory '196G'
 	
         input:
-        path seq1 from reads11
-        path seq2 from reads12
+	tuple val(accession), file(R1) from reads11
+	tuple val(accession2), file(R2) from reads12
         
         output:
-        file 'mid.fq' into ReadTrimNorm1
+	tuple val(accession), file("${accession}.mid.fq") into ReadTrimNorm1
 
 	"""
-	bbnorm.sh in=$seq1 in2=$seq2 outlow=low.fq outmid=mid.fq outhigh=high.fq passes=1 lowbindepth=6 highbindepth=150 -Xmx192g
+	bbnorm.sh in=$R1 in2=$R2 outlow=low.fq outmid="${accession}.mid.fq" outhigh=high.fq passes=1 lowbindepth=6 highbindepth=150 -Xmx192g
 	"""
 }
 
@@ -60,15 +89,14 @@ process pairInt {
 
 	input:
 	path 'pairInt' from pairInt
-	path 'Intpair' from ReadTrimNorm1
+	tuple val(accession), file(Intpair)from ReadTrimNorm1
 
 	output:
-	file 'R1reads.fastq' into R1Tofastq
-	file 'R2reads.fastq' into R2Tofastq
+	tuple val(accession), file("${accession}_norm_1.fastq"), file("${accession}_norm_1.fastq") into RTofastq
 
 	"""
 	chmod 744 $pairInt
-	./$pairInt < $Intpair R1reads.fastq R2reads.fastq
+	./$pairInt < $Intpair "${accession}_norm_1.fastq" "${accession}_norm_2.fastq"
 	"""
 
 }
@@ -79,12 +107,10 @@ process fastqpair2 {
 	memory '32G'
 
 	input:
-	path R1p from R1Tofastq
-	path R2p from R2Tofastq
+	tuple val(accession), file(R1p), file(R2p) from RTofastq
 
 	output:
-	file 'R1reads.fastq.paired.fq' into pairR1T
-	file 'R2reads.fastq.paired.fq' into pairR2T
+	tuple val(accession), file("${R1p}.paired.fastq"), file("${R1p}.paired.fastq") into pairRT
 	//For now not even bothering with unpaired
 
 	"""
@@ -92,26 +118,25 @@ process fastqpair2 {
 	"""
 }
 
-pairR1T.into{P1NormSpades; P1NormTrinity}
-pairR2T.into{P2NormSpades; P2NormTrinity}
+pairRT.into{PNormSpades; PNormTrinity}
+
 
 
 process SpadeAssemble {
 	
-  memory '24G'
+  	memory '24G'
 
-  input:
-    path R1Norm from P1NormSpades
-    path R2Norm from P2NormSpades
+  	input:
+  	tuple val(accession), file(R1p), file(R2p) from PNormSpades
 
-  output:
-    file 'spades_output.tar.gz' into Spades
+  	output:
+	file("${accession}.spades.tar.gz") into Spades
     
-    """
-    rnaspades.py  --pe1-1 $R1Norm --pe1-2 $R2Norm  -o spades_output
-    tar -zcvf spades_output.tar.gz spades_output 
+    	"""
+    	rnaspades.py  --pe1-1 $R1p --pe1-2 $R2p  -o $accession
+    	tar -zcvf "${accession}.spades.tar.gz" $accession
     
-    """
+    	"""
     
     
 }
@@ -119,18 +144,17 @@ process SpadeAssemble {
 
 process TrinityAssemble {
 	
-  memory '196G'
+  	memory '196G'
 	
-  input:
-	path R1pair from P1NormTrinity
-	path R2pair from P2NormTrinity
+  	input:
+	tuple val(accession), file(R1p), file(R2p) from PNormSpades
 	
-  output:
-	file 'trinity_output.tar.gz' into Trinity
+  	output:
+	file("${accession}.trinity.tar.gz") into Trinity
 	
-  """
-	Trinity --seqType fq --left $R1pair --right $R2pair --max_memory 190G --output trinity_output
-	tar -zcvf trinity_output.tar.gz trinity_output 
+  	"""
+	Trinity --seqType fq --left $R1p --right $R2p --max_memory 190G --output $accession
+	tar -zcvf "${accession}.trinity.tar.gz" $accession
 	"""
 
 }
