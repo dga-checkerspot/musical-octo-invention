@@ -92,7 +92,7 @@ process pairInt {
 	tuple val(accession), file(Intpair) from ReadTrimNorm1
 
 	output:
-	tuple val(accession), file("${accession}_norm_1.fastq"), file("${accession}_norm_1.fastq") into RTofastq
+	tuple val(accession), file("${accession}_norm_1.fastq"), file("${accession}_norm_2.fastq") into RTofastq
 
 	"""
 	chmod 744 $pairInt
