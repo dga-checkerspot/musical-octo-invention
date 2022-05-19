@@ -89,7 +89,7 @@ process pairInt {
 
 	input:
 	path 'pairInt' from pairInt
-	tuple val(accession), file(Intpair)from ReadTrimNorm1
+	tuple val(accession), file(Intpair) from ReadTrimNorm1
 
 	output:
 	tuple val(accession), file("${accession}_norm_1.fastq"), file("${accession}_norm_1.fastq") into RTofastq
@@ -147,7 +147,7 @@ process TrinityAssemble {
   	memory '196G'
 	
   	input:
-	tuple val(accession), file(R1p), file(R2p) from PNormSpades
+	tuple val(accession), file(R1p), file(R2p) from PNormTrinity
 	
   	output:
 	file("${accession}.trinity.tar.gz") into Trinity
