@@ -110,7 +110,7 @@ process fastqpair2 {
 	tuple val(accession), file(R1p), file(R2p) from RTofastq
 
 	output:
-	tuple val(accession), file("${R1p}.paired.fastq"), file("${R1p}.paired.fastq") into pairRT
+	tuple val(accession), file("${R1p}.paired.fastq"), file("${R2p}.paired.fastq") into pairRT
 	//For now not even bothering with unpaired
 
 	"""
