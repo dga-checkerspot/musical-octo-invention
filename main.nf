@@ -2,7 +2,7 @@
 
 //sequences1='s3://pipe.scratch.3/resources/ERR2041047.1_1.fastq'
 //sequences12='s3://pipe.scratch.3/resources/ERR2041047.1_2.fastq'
-//pairInt='s3://transcriptomepipeline/PairInterleaves.sh'
+pairInt='s3://transcriptomepipeline/PairInterleaves.sh'
 
 
 //sequencedataset1= Channel.fromPath(sequences1)
