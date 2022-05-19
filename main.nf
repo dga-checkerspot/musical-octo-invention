@@ -44,10 +44,10 @@ process cutadapt11 {
 	tuple val(accession), file(R1), file(R2) from dumpout1
 	
 	output:
-	tuple val(accession), file("${accession}_1.fastq") into reads11
+	tuple val(accession), file("${accession}_cut_1.fastq") into reads11
 	
 	"""
-	cutadapt --rename='{id}/1' $R1 -j 0 -o "${accession}_1.fastq"
+	cutadapt --rename='{id}/1' $R1 -j 0 -o "${accession}_cut_1.fastq"
 	"""
 }
 
@@ -58,10 +58,10 @@ process cutadapt12 {
 	tuple val(accession), file(R1), file(R2) from dumpout2
 	
 	output:
-	tuple val(accession), file("${accession}_2.fastq") into reads12
+	tuple val(accession), file("${accession}_cut_2.fastq") into reads12
 	
 	"""
-	cutadapt --rename='{id}/2' $R2 -j 0 -o "${accession}_2.fastq"
+	cutadapt --rename='{id}/2' $R2 -j 0 -o "${accession}_cut_2.fastq"
 	"""
 }
 
