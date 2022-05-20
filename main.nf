@@ -44,34 +44,21 @@ process cutadapt11 {
 	tuple val(accession), file(R1), file(R2) from dumpout1
 	
 	output:
-	tuple val(accession), file("${accession}_cut_1.fastq") into reads11
+	tuple val(accession), file("${accession}_cut_1.fastq"), file("${accession}_cut_2.fastq") into readscut
 	
 	"""
 	cutadapt --rename='{id}/1' $R1 -j 0 -o "${accession}_cut_1.fastq"
-	"""
-}
-
-process cutadapt12 {
-	memory '16G'
-	
-	input:
-	tuple val(accession), file(R1), file(R2) from dumpout2
-	
-	output:
-	tuple val(accession), file("${accession}_cut_2.fastq") into reads12
-	
-	"""
 	cutadapt --rename='{id}/2' $R2 -j 0 -o "${accession}_cut_2.fastq"
 	"""
 }
+
 
 process bbnorm {
 
 	memory '196G'
 	
         input:
-	tuple val(accession), file(R1) from reads11
-	tuple val(accession2), file(R2) from reads12
+	tuple val(accession), file(R1), file(R2) from readscut
         
         output:
 	tuple val(accession), file("${accession}.mid.fq") into ReadTrimNorm1
