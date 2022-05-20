@@ -140,8 +140,8 @@ process TrinityAssemble {
 	file("${accession}.trinity.tar.gz") into Trinity
 	
   	"""
-	Trinity --seqType fq --left $R1p --right $R2p --max_memory 190G --output $accession
-	tar -zcvf "${accession}.trinity.tar.gz" $accession
+	Trinity --seqType fq --left $R1p --right $R2p --max_memory 190G --output "${accession}_trinity"
+	tar -zcvf "${accession}.trinity.tar.gz" "${accession}_trinity"
 	"""
 
 }
