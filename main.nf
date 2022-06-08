@@ -145,7 +145,7 @@ process TrinityAssemble {
 	file("${accession}_Trinity.fasta") into Trinity
 	
   	"""
-	Trinity --seqType fq --left $R1p --right $R2p --max_memory 190G --output "${accession}_trinity"
+	Trinity --seqType fq --left $R1p --right $R2p --max_memory 31G --output "${accession}_trinity"
 	mv ./"${accession}_trinity"/Trinity.tmp.fasta "${accession}_Trinity.fasta"
 	"""
 
