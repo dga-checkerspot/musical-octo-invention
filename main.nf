@@ -40,6 +40,7 @@ dumpout.into{dumpout1; dumpout2}
 
 
 process cutadapt11 {
+	errorStrategy 'retry'
 	memory '16G'
 	
 	input:
@@ -74,6 +75,7 @@ process bbnorm {
 
 process pairInt {
 
+	errorStrategy 'retry'
 	memory '4G'
 
 	input:
@@ -93,6 +95,8 @@ process pairInt {
 
 process fastqpair2 {
 
+
+	errorStrategy 'retry'
 	memory '32G'
 
 	input:
@@ -137,6 +141,7 @@ myDir = file(params.results)
 
 
 process TrinityAssemble {
+
 	
   	memory '32G'
 	
