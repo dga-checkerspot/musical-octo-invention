@@ -108,7 +108,7 @@ process fastqpair2 {
 pairRT.into{PNormSpades; PNormTrinity}
 
 
-
+/*
 process SpadeAssemble {
 	
   	memory '24G'
@@ -127,24 +127,31 @@ process SpadeAssemble {
     
     
 }
+*/
+
+params.results = "s3://pipe.scratch.3/resources/TranscriptomeOut/"
+
+myDir = file(params.results)
 
 
 process TrinityAssemble {
 	
-  	memory '196G'
+  	memory '32G'
 	
   	input:
 	tuple val(accession), file(R1p), file(R2p) from PNormTrinity
 	
   	output:
-	file("${accession}.trinity.tar.gz") into Trinity
+	file("${accession}_Trinity.fasta") into Trinity
 	
   	"""
 	Trinity --seqType fq --left $R1p --right $R2p --max_memory 190G --output "${accession}_trinity"
-	tar -zcvf "${accession}.trinity.tar.gz" "${accession}_trinity"
+	mv ./"${accession}_trinity"/Trinity.tmp.fasta "${accession}_Trinity.fasta"
 	"""
 
 }
 
+
+Trinity.subscribe { it.copyTo(myDir) }
 
 
