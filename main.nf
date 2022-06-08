@@ -19,6 +19,7 @@ chlamyref='s3://pipe.scratch.3/resources/Chlamy23s.fasta'
 
 process runfasta {
 	
+	memory '16G'
 	input:
   	val accession from sraLines1
 	
