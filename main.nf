@@ -142,7 +142,7 @@ myDir = file(params.results)
 
 process TrinityAssemble {
 
-	
+	errorStrategy 'retry'
   	memory '24G'
 	
   	input:
