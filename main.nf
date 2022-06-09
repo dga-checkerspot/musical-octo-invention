@@ -9,7 +9,7 @@ pairInt='s3://transcriptomepipeline/PairInterleaves.sh'
 //sequencedataset2= Channel.fromPath(sequences12)
 
 
-sraLines1=file('s3://pipe.scratch.3/resources/BigNCBISearchSeqs.txt')
+sraLines1=file('s3://pipe.scratch.3/resources/BigTranscriptomeAccessions.txt')
     .readLines()
     .each { println it }
 
@@ -97,7 +97,7 @@ process fastqpair2 {
 
 
 	errorStrategy 'retry'
-	memory '32G'
+	memory '4G'
 
 	input:
 	tuple val(accession), file(R1p), file(R2p) from RTofastq
@@ -143,7 +143,7 @@ myDir = file(params.results)
 process TrinityAssemble {
 
 	
-  	memory '32G'
+  	memory '24G'
 	
   	input:
 	tuple val(accession), file(R1p), file(R2p) from PNormTrinity
@@ -152,7 +152,7 @@ process TrinityAssemble {
 	file("${accession}_Trinity.fasta") into Trinity
 	
   	"""
-	Trinity --seqType fq --left $R1p --right $R2p --max_memory 31G --output "${accession}_trinity"
+	Trinity --seqType fq --left $R1p --right $R2p --max_memory 23G --output "${accession}_trinity"
 	mv ./"${accession}_trinity"/Trinity.tmp.fasta "${accession}_Trinity.fasta"
 	"""
 
