@@ -67,7 +67,7 @@ process bbnorm {
 	tuple val(accession), file("${accession}.mid.fq") into ReadTrimNorm1
 
 	"""
-	bbnorm.sh in=$R1 in2=$R2 outlow=low.fq outmid="${accession}.mid.fq" outhigh=high.fq passes=1 lowbindepth=6 highbindepth=150 -Xmx192g
+	bbnorm.sh in=$R1 in2=$R2 outlow=low.fq outmid="${accession}.mid.fq" outhigh=high.fq passes=1 lowbindepth=6 highbindepth=90 -Xmx192g
 	"""
 }
 
@@ -158,7 +158,24 @@ process TrinityAssemble {
 
 }
 
+process output {
 
-Trinity.subscribe { it.copyTo(myDir) }
+	
+  	input:
+	path outputfile from Trinity
+	
+  	output:
+	file("${outputfile}.final") into TrinityOut
+	
+  	"""
+	mv $outputfile "${outputfile}.final"
+	"""
+
+}
+
+
+
+
+TrinityOut.subscribe { it.copyTo(myDir) }
 
 
