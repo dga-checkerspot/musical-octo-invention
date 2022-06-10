@@ -76,7 +76,7 @@ process bbnorm {
 process pairInt {
 
 	errorStrategy 'retry'
-	memory '4G'
+	memory '16G'
 
 	input:
 	path 'pairInt' from pairInt
@@ -97,7 +97,7 @@ process fastqpair2 {
 
 
 	errorStrategy 'retry'
-	memory '4G'
+	memory '16G'
 
 	input:
 	tuple val(accession), file(R1p), file(R2p) from RTofastq
