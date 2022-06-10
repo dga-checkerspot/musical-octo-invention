@@ -143,7 +143,7 @@ myDir = file(params.results)
 process TrinityAssemble {
 
 	errorStrategy 'retry'
-  	memory '24G'
+  	memory '48G'
 	
   	input:
 	tuple val(accession), file(R1p), file(R2p) from PNormTrinity
@@ -152,7 +152,7 @@ process TrinityAssemble {
 	file("${accession}_Trinity.fasta") into Trinity
 	
   	"""
-	Trinity --seqType fq --left $R1p --right $R2p --max_memory 23G --output "${accession}_trinity"
+	Trinity --seqType fq --left $R1p --right $R2p --max_memory 48G --output "${accession}_trinity"
 	mv ./"${accession}_trinity"/Trinity.tmp.fasta "${accession}_Trinity.fasta"
 	"""
 
