@@ -9,7 +9,7 @@ pairInt='s3://transcriptomepipeline/PairInterleaves.sh'
 //sequencedataset2= Channel.fromPath(sequences12)
 
 
-sraLines1=file('s3://pipe.scratch.3/resources/BigTranscriptomeAccessions.txt')
+sraLines1=file('s3://pipe.scratch.3/resources/BigTranscriptomeAccessionsPedinophyceae.txt')
     .readLines()
     .each { println it }
 
